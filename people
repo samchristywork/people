@@ -66,6 +66,43 @@ case "$1" in
       echo "$human_readable_date" "$line"
     done < "$filename"
     ;;
+  summary)
+    (
+      echo "Name	Last Contacted	Contact goal"
+      "$0" list | while read -r name; do
+        name=$(echo "$name" | awk '{print $1}')
+        date=$(echo "$name" | awk '{print $1}')
+
+        goal=$(grep ".*	goal	$name" "$filename" | tail -n 1 | awk '{print $4}')
+
+        last_contacted=$(grep ".*	contact	$name$" "$filename" | tail -n 1 | awk '{print $1}')
+        if [ -z "$last_contacted" ]; then
+          last_contacted=$(printf "never")
+        else
+          current_date=$(date +%s)
+          difference=$(( "$current_date" - "$last_contacted"))
+          last_contacted=$(awk -v diff="$difference" -v goal="$goal" '
+          BEGIN {
+            days=diff / 86400
+            hours=diff % 86400 / 3600
+            minutes=diff % 3600 / 60
+            seconds=diff % 60
+
+            printf "%d:%02d:%02d:%02d",
+              days,
+              hours,
+              minutes,
+              seconds
+          }')
+        fi
+
+        if [ -z "$goal" ]; then
+          goal="none"
+        fi
+        echo "$name	$last_contacted	$goal"
+      done
+    )
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
@@ -75,6 +112,7 @@ case "$1" in
     echo "  goal - set a goal for a person"
     echo "  note - add a note for a person"
     echo "  show - print a list of events"
+    echo "  summary - print a summary of people"
     exit 1
     ;;
 esac
