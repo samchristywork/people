@@ -103,6 +103,26 @@ case "$1" in
       done
     )
     ;;
+  behind)
+    "$0" list | while read -r name; do
+      goal=$(grep ".*	goal	$name" "$filename" | tail -n 1 | awk '{print $4}')
+      if [ -z "$goal" ]; then
+        continue
+      fi
+
+      last_contacted=$(grep ".*	contact	$name$" "$filename" | tail -n 1 | awk '{print $1}')
+      if [ -z "$last_contacted" ]; then
+        last_contacted=0
+      fi
+
+      current_date=$(date +%s)
+      difference=$(( current_date - last_contacted))
+      days=$(( difference / 86400 ))
+      if [ $days -gt "$goal" ]; then
+        echo "$name"
+      fi
+    done
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
@@ -113,6 +133,7 @@ case "$1" in
     echo "  note - add a note for a person"
     echo "  show - print a list of events"
     echo "  summary - print a summary of people"
+    echo "  behind - print a list of people behind on contact"
     exit 1
     ;;
 esac
