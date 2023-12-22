@@ -118,7 +118,7 @@ case "$1" in
         fi
         echo "$name	$last_contacted	$goal"
       done
-    )
+    ) | column -t -s $'\t'
     ;;
   behind)
     "$0" list | while read -r name; do
