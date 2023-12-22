@@ -22,11 +22,21 @@ case "$1" in
     fi
     grep "^.*	add	.*$" "$filename" | awk '{print $3}' | sort | uniq
     ;;
+  contact)
+    person=$("$0" list | fzf)
+    if [ -z "$person" ]; then
+      exit 0
+    fi
+
+    date=$(date +%s)
+    echo "$date	contact	$person" >> "$filename"
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
     echo "  add <name> - add a person"
     echo "  list - list people"
+    echo "  contact - contact a person"
     exit 1
     ;;
 esac
