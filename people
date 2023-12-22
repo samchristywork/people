@@ -7,9 +7,18 @@ if [ ! -f "$filename" ]; then
 fi
 
 case "$1" in
+  add)
+    if [ $# -ne 2 ]; then
+      echo "Usage: people add <name>"
+      exit 1
+    fi
+    date=$(date +%s)
+    echo "$date	add	$2" >> "$filename"
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
+    echo "  add <name> - add a person"
     exit 1
     ;;
 esac
