@@ -59,6 +59,13 @@ case "$1" in
     date=$(date +%s)
     echo "$date	note	$person	$note" >> "$filename"
     ;;
+  show)
+    while read -r line; do
+      date=$(echo "$line" | awk '{print $1}')
+      human_readable_date=$(date -d "@$date" "+%Y-%m-%d %H:%M:%S")
+      echo "$human_readable_date" "$line"
+    done < "$filename"
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
@@ -67,6 +74,7 @@ case "$1" in
     echo "  contact - contact a person"
     echo "  goal - set a goal for a person"
     echo "  note - add a note for a person"
+    echo "  show - print a list of events"
     exit 1
     ;;
 esac
