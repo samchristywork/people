@@ -77,22 +77,39 @@ case "$1" in
 
         last_contacted=$(grep ".*	contact	$name$" "$filename" | tail -n 1 | awk '{print $1}')
         if [ -z "$last_contacted" ]; then
-          last_contacted=$(printf "never")
+          if [ -n "$goal" ]; then
+            last_contacted=$(printf "\033[0;31mnever\033[0m")
+          else
+            last_contacted=$(printf "never")
+          fi
         else
           current_date=$(date +%s)
           difference=$(( "$current_date" - "$last_contacted"))
           last_contacted=$(awk -v diff="$difference" -v goal="$goal" '
           BEGIN {
+            red="\033[0;31m"
+            yellow="\033[0;33m"
+            green="\033[0;32m"
+            white="\033[0;37m"
+            clear="\033[0m"
+
             days=diff / 86400
             hours=diff % 86400 / 3600
             minutes=diff % 3600 / 60
             seconds=diff % 60
 
-            printf "%d:%02d:%02d:%02d",
+            color=green
+            if (days>goal) {
+              color=red
+            }
+
+            printf "%s%d:%02d:%02d:%02d%s",
+              color,
               days,
               hours,
               minutes,
-              seconds
+              seconds,
+              clear
           }')
         fi
 
