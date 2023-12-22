@@ -45,6 +45,20 @@ case "$1" in
     date=$(date +%s)
     echo "$date	goal	$person	$goal" >> "$filename"
     ;;
+  note)
+    person=$("$0" list | fzf)
+    if [ -z "$person" ]; then
+      exit 0
+    fi
+
+    read -r -p "Note: " note
+    if [ -z "$note" ]; then
+      exit 0
+    fi
+
+    date=$(date +%s)
+    echo "$date	note	$person	$note" >> "$filename"
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
@@ -52,6 +66,7 @@ case "$1" in
     echo "  list - list people"
     echo "  contact - contact a person"
     echo "  goal - set a goal for a person"
+    echo "  note - add a note for a person"
     exit 1
     ;;
 esac
