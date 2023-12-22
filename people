@@ -15,10 +15,18 @@ case "$1" in
     date=$(date +%s)
     echo "$date	add	$2" >> "$filename"
     ;;
+  list)
+    if [ $# -ne 1 ]; then
+      echo "Usage: people list"
+      exit 1
+    fi
+    grep "^.*	add	.*$" "$filename" | awk '{print $3}' | sort | uniq
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
     echo "  add <name> - add a person"
+    echo "  list - list people"
     exit 1
     ;;
 esac
