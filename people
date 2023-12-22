@@ -1,0 +1,15 @@
+#!/bin/bash
+
+filename="$HOME/.people"
+
+if [ ! -f "$filename" ]; then
+  touch "$filename"
+fi
+
+case "$1" in
+  *)
+    echo "Usage: people <command>"
+    echo "Commands:"
+    exit 1
+    ;;
+esac
