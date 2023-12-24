@@ -140,6 +140,9 @@ case "$1" in
       fi
     done | column -t -s $'\t'
     ;;
+  edit)
+    $EDITOR "$filename"
+    ;;
   *)
     echo "Usage: people <command>"
     echo "Commands:"
@@ -151,6 +154,7 @@ case "$1" in
     echo "  show - print a list of events"
     echo "  summary - print a summary of people"
     echo "  behind - print a list of people behind on contact"
+    echo "  edit - edit the people file"
     exit 1
     ;;
 esac
