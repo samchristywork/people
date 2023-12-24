@@ -138,7 +138,7 @@ case "$1" in
           echo "$name	$days days overdue"
         fi
       fi
-    done
+    done | column -t -s $'\t'
     ;;
   *)
     echo "Usage: people <command>"
