@@ -129,14 +129,14 @@ case "$1" in
 
       last_contacted=$(grep ".*	contact	$name$" "$filename" | tail -n 1 | awk '{print $1}')
       if [ -z "$last_contacted" ]; then
-        last_contacted=0
-      fi
-
-      current_date=$(date +%s)
-      difference=$(( current_date - last_contacted))
-      days=$(( difference / 86400 ))
-      if [ $days -gt "$goal" ]; then
-        echo "$name"
+        echo "$name	∞"
+      else
+        current_date=$(date +%s)
+        difference=$(( current_date - last_contacted))
+        days=$(( difference / 86400 ))
+        if [ $days -gt "$goal" ]; then
+          echo "$name	$days days overdue"
+        fi
       fi
     done
     ;;
