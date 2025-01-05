@@ -12,6 +12,7 @@ usage() {
     echo "  remove <name>  Remove a person"
     echo "  list           List all people and last contact dates"
     echo "  contact <name> Update last contact date to today"
+    echo "  edit           Open the people file in \$EDITOR"
 }
 
 touch "$DATA_FILE"
@@ -58,6 +59,9 @@ case "${1:-}" in
         today="$(date +%Y-%m-%d)"
         awk -v name="$name" -v today="$today" 'BEGIN{IGNORECASE=1; FS=OFS="\t"} tolower($1)==tolower(name){$2=today} {print}' "$DATA_FILE" > "$DATA_FILE.tmp" && mv "$DATA_FILE.tmp" "$DATA_FILE"
         echo "Updated contact date for '$name' to $today"
+        ;;
+    edit)
+        "${EDITOR:-vi}" "$DATA_FILE"
         ;;
     *)
         usage
