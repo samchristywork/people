@@ -8,11 +8,11 @@ usage() {
     echo "Usage: people.sh <subcommand> [args]"
     echo ""
     echo "Subcommands:"
-    echo "  add <name>     Add a person (contact date set to today)"
-    echo "  remove <name>  Remove a person"
-    echo "  list           List all people and last contact dates"
-    echo "  contact <name> Update last contact date to today"
-    echo "  edit           Open the people file in \$EDITOR"
+    echo "  add <name> [date]  Add a person (date defaults to today, format: YYYY-MM-DD)"
+    echo "  remove <name>      Remove a person"
+    echo "  list               List all people and last contact dates"
+    echo "  contact <name>     Update last contact date to today"
+    echo "  edit               Open the people file in \$EDITOR"
 }
 
 touch "$DATA_FILE"
@@ -25,7 +25,12 @@ case "${1:-}" in
             echo "Error: '$name' already exists"
             exit 1
         fi
-        echo "$name	$(date +%Y-%m-%d)" >> "$DATA_FILE"
+        date="${3:-$(date +%Y-%m-%d)}"
+        if ! date -d "$date" +%Y-%m-%d &>/dev/null; then
+            echo "Error: invalid date '$date' (expected YYYY-MM-DD)"
+            exit 1
+        fi
+        echo "$name	$date" >> "$DATA_FILE"
         echo "Added '$name'"
         ;;
     remove)
