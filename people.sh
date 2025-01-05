@@ -21,17 +21,18 @@ case "${1:-}" in
     add)
         name="${2:-}"
         [[ -z "$name" ]] && { echo "Error: name required"; exit 1; }
-        if grep -qiF "$name" "$DATA_FILE" 2>/dev/null; then
-            echo "Error: '$name' already exists"
-            exit 1
-        fi
         date="${3:-$(date +%Y-%m-%d)}"
         if ! date -d "$date" +%Y-%m-%d &>/dev/null; then
             echo "Error: invalid date '$date' (expected YYYY-MM-DD)"
             exit 1
         fi
-        echo "$name	$date" >> "$DATA_FILE"
-        echo "Added '$name'"
+        if grep -qiF "$name" "$DATA_FILE" 2>/dev/null; then
+            awk -v name="$name" -v date="$date" 'BEGIN{IGNORECASE=1; FS=OFS="\t"} tolower($1)==tolower(name){$2=date} {print}' "$DATA_FILE" > "$DATA_FILE.tmp" && mv "$DATA_FILE.tmp" "$DATA_FILE"
+            echo "Updated '$name'"
+        else
+            echo "$name	$date" >> "$DATA_FILE"
+            echo "Added '$name'"
+        fi
         ;;
     remove)
         name="${2:-}"
