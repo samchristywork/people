@@ -49,10 +49,12 @@ case "${1:-}" in
             echo "No people on record."
             exit 0
         fi
-        printf "%-30s %s\n" "Name" "Last Contact"
-        printf "%-30s %s\n" "----" "------------"
+        printf "%-30s %-14s %s\n" "Name" "Last Contact" "Days Ago"
+        printf "%-30s %-14s %s\n" "----" "------------" "--------"
+        today_ts="$(date -d today +%s)"
         while IFS=$'\t' read -r name date; do
-            printf "%-30s %s\n" "$name" "$date"
+            days=$(( (today_ts - $(date -d "$date" +%s)) / 86400 ))
+            printf "%-30s %-14s %s\n" "$name" "$date" "$days"
         done < "$DATA_FILE"
         ;;
     contact)
