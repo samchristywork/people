@@ -16,6 +16,7 @@ usage() {
 }
 
 touch "$DATA_FILE"
+trap 'rm -f "$DATA_FILE.tmp"' EXIT
 
 case "${1:-}" in
     add)
