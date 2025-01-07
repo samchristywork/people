@@ -22,7 +22,7 @@ case "${1:-}" in
         name="${2:-}"
         [[ -z "$name" ]] && { echo "Error: name required"; exit 1; }
         date="${3:-$(date +%Y-%m-%d)}"
-        if ! date -d "$date" +%Y-%m-%d &>/dev/null; then
+        if ! [[ "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || ! date -d "$date" +%Y-%m-%d &>/dev/null; then
             echo "Error: invalid date '$date' (expected YYYY-MM-DD)"
             exit 1
         fi
