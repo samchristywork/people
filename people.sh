@@ -26,7 +26,7 @@ case "${1:-}" in
             echo "Error: invalid date '$date' (expected YYYY-MM-DD)"
             exit 1
         fi
-        if grep -qiF "$name" "$DATA_FILE" 2>/dev/null; then
+        if awk -v name="$name" 'BEGIN{IGNORECASE=1;FS="\t"} tolower($1)==tolower(name){found=1;exit} END{exit !found}' "$DATA_FILE"; then
             awk -v name="$name" -v date="$date" 'BEGIN{IGNORECASE=1; FS=OFS="\t"} tolower($1)==tolower(name){$2=date} {print}' "$DATA_FILE" > "$DATA_FILE.tmp" && mv "$DATA_FILE.tmp" "$DATA_FILE"
             echo "Updated '$name'"
         else
@@ -37,11 +37,11 @@ case "${1:-}" in
     remove)
         name="${2:-}"
         [[ -z "$name" ]] && { echo "Error: name required"; exit 1; }
-        if ! grep -qiF "$name" "$DATA_FILE" 2>/dev/null; then
+        if ! awk -v name="$name" 'BEGIN{IGNORECASE=1;FS="\t"} tolower($1)==tolower(name){found=1;exit} END{exit !found}' "$DATA_FILE"; then
             echo "Error: '$name' not found"
             exit 1
         fi
-        grep -viF "$name" "$DATA_FILE" > "$DATA_FILE.tmp" && mv "$DATA_FILE.tmp" "$DATA_FILE"
+        awk -v name="$name" 'BEGIN{IGNORECASE=1;FS="\t"} tolower($1)!=tolower(name)' "$DATA_FILE" > "$DATA_FILE.tmp" && mv "$DATA_FILE.tmp" "$DATA_FILE"
         echo "Removed '$name'"
         ;;
     list)
@@ -60,7 +60,7 @@ case "${1:-}" in
     contact)
         name="${2:-}"
         [[ -z "$name" ]] && { echo "Error: name required"; exit 1; }
-        if ! grep -qiF "$name" "$DATA_FILE" 2>/dev/null; then
+        if ! awk -v name="$name" 'BEGIN{IGNORECASE=1;FS="\t"} tolower($1)==tolower(name){found=1;exit} END{exit !found}' "$DATA_FILE"; then
             echo "Error: '$name' not found"
             exit 1
         fi
