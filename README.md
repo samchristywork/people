@@ -2,6 +2,12 @@
 
 ## Overview
 
+People is a lightweight Bash script for tracking your social contacts. It
+stores a list of names alongside the date you last reached out to each person,
+then surfaces who you haven't spoken to recently. The data lives in a plain
+tab-separated file (`~/.people` by default), so it's easy to inspect, edit, and
+back up.
+
 ## Features
 
 ## Usage
