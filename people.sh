@@ -54,8 +54,12 @@ case "${1:-}" in
         printf "%-30s %-14s %s\n" "----" "------------" "--------"
         today_ts="$(date -d today +%s)"
         while IFS=$'\t' read -r name date; do
-            days=$(( (today_ts - $(date -d "$date" +%s)) / 86400 ))
-            printf "%d\t%-30s %-14s %s\n" "$days" "$name" "$date" "$days"
+            if [[ "$date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] && date_ts="$(date -d "$date" +%s 2>/dev/null)"; then
+                days=$(( (today_ts - date_ts) / 86400 ))
+                printf "%d\t%-30s %-14s %s\n" "$days" "$name" "$date" "$days"
+            else
+                printf "0\t%-30s %-14s %s\n" "$name" "$date" "?"
+            fi
         done < "$DATA_FILE" | sort -rn | cut -f2-
         ;;
     contact)
