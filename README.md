@@ -10,6 +10,14 @@ back up.
 
 ## Features
 
+- Track people and last contact dates in a plain-text file
+- List contacts sorted by number of days since last contact
+- Record a new contact event with a single command
+- Add, update, and remove entries from the command line
+- Fall back to `$EDITOR` for direct file editing
+- Configurable data file path via `$PEOPLE_FILE` environment variable
+- Strict date validation (YYYY-MM-DD)
+
 ## Usage
 
 ## Dependencies
