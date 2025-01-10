@@ -20,6 +20,17 @@ back up.
 
 ## Usage
 
+```
+Usage: people.sh <subcommand> [args]
+
+Subcommands:
+  add <name> [date]  Add a person (date defaults to today, format: YYYY-MM-DD)
+  remove <name>      Remove a person
+  list               List all people and last contact dates
+  contact <name>     Update last contact date to today
+  edit               Open the people file in $EDITOR
+```
+
 ## Dependencies
 
 ## License
