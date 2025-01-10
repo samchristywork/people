@@ -33,6 +33,11 @@ Subcommands:
 
 ## Dependencies
 
+```
+bash
+coreutils (date, sort, awk)
+```
+
 ## License
 
 This work is licensed under the GNU General Public License version 3 (GPLv3).
